@@ -20,11 +20,7 @@ func TestTrWubiCode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := TrWubiCode(tt.args.word)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("TrWubiCode() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := TrWubiCode(tt.args.word)
 			if got != tt.want {
 				t.Errorf("TrWubiCode() = %v, want %v", got, tt.want)
 			}
@@ -66,15 +62,11 @@ func TestTrWubiFull(t *testing.T) {
 			word:     "生活就像海洋，只有意志坚强的人才能到达彼岸",
 			mode:     RmTone,
 			splitter: []string{""},
-		}, want: "生活就像海洋，只有意志坚强的人才能到达彼岸", wantErr: true},
+		}, want: "tgitdyiwqjitxiu，kweujnfnjcfxkrwftcegcdpthcmdfj", wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := TrWubiFull(tt.args.word, tt.args.mode, tt.args.splitter...)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("TrWubiFull() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := TrWubiFull(tt.args.word, tt.args.mode, tt.args.splitter...)
 			if got != tt.want {
 				t.Errorf("TrWubiFull() = %v, want %v", got, tt.want)
 			}

@@ -1,6 +1,7 @@
 package trcnwords
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -36,11 +37,7 @@ func TestTrPinyinFull(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := TrPinyinFull(tt.args.word, tt.args.mode, tt.args.splitter...)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("TrPinyinFull() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := TrPinyinFull(tt.args.word, tt.args.mode, tt.args.splitter...)
 			if got != tt.want {
 				t.Errorf("TrPinyinFull() = %v, want %v", got, tt.want)
 			}
@@ -80,11 +77,7 @@ func Benchmark_TestPinyinFull(b *testing.B) {
 	}
 	for _, tt := range tests {
 		b.Run(tt.name, func(b *testing.B) {
-			got, err := TrPinyinFull(tt.args.word, tt.args.mode, tt.args.splitter...)
-			if (err != nil) != tt.wantErr {
-				b.Errorf("TrPinyinFull() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := TrPinyinFull(tt.args.word, tt.args.mode, tt.args.splitter...)
 			if got != tt.want {
 				b.Errorf("TrPinyinFull() = %v, want %v", got, tt.want)
 			}
@@ -108,11 +101,7 @@ func TestTrPinyinCode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := TrPinyinCode(tt.args.word)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("TrPinyinCode() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := TrPinyinCode(tt.args.word)
 			if got != tt.want {
 				t.Errorf("TrPinyinCode() = %v, want %v", got, tt.want)
 			}
@@ -136,14 +125,22 @@ func Benchmark_TrPinyinCode(b *testing.B) {
 	}
 	for _, tt := range tests {
 		b.Run(tt.name, func(b *testing.B) {
-			got, err := TrPinyinCode(tt.args.word)
-			if (err != nil) != tt.wantErr {
-				b.Errorf("TrPinyinCode() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := TrPinyinCode(tt.args.word)
 			if got != tt.want {
 				b.Errorf("TrPinyinCode() = %v, want %v", got, tt.want)
 			}
 		})
 	}
+}
+
+func Test_1(t *testing.T) {
+	word := "我是一个中国人"
+	pyCode := TrPinyinCode(word)
+	wbCode := TrWubiCode(word)
+	fullPy := TrPinyinFull(word, Split|RmTone|CapFirst, "-")
+	fullWb := TrWubiFull(word, CapFirst|Split, "-")
+	fmt.Println(pyCode)
+	fmt.Println(wbCode)
+	fmt.Println(fullPy)
+	fmt.Println(fullWb)
 }

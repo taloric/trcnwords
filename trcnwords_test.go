@@ -5,6 +5,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
+	_ = LoadFiles("data/pinyin.csv", "data/wubi.csv", "data/pinyincode.csv", "data/wubicode.csv")
 	m.Run()
 }
 

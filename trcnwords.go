@@ -9,13 +9,6 @@ import (
 	"strings"
 )
 
-const (
-	Pinyin     string = "data/pinyin.csv"
-	Wubi       string = "data/wubi.csv"
-	PinyinCode string = "data/pinyincode.csv"
-	WubiCode   string = "data/wubicode.csv"
-)
-
 type SymbolMode byte
 
 func (s SymbolMode) HasFlag(flag SymbolMode) bool {
@@ -53,20 +46,27 @@ var (
 
 //read a data copy from file
 var (
-	PinyinDict     CodeMap = make(CodeMap, 0)
-	WubiDict       CodeMap = make(CodeMap, 0)
-	PinyinCodeDict CodeMap = make(CodeMap, 0)
-	WubiCodeDict   CodeMap = make(CodeMap, 0)
+	PinyinDict     *CodeMap
+	WubiDict       *CodeMap
+	PinyinCodeDict *CodeMap
+	WubiCodeDict   *CodeMap
 	toneDict       map[vowel]vowel
 )
 
-func init() {
-	dataHandle := map[string](*CodeMap){
-		Pinyin:     &PinyinDict,
-		Wubi:       &WubiDict,
-		PinyinCode: &PinyinCodeDict,
-		WubiCode:   &WubiCodeDict,
+func LoadFiles(data ...string) error {
+	if len(data) < 4 {
+		return fmt.Errorf("data file less than 4, could not initialize")
 	}
+
+	dataHandle := make(map[string](*CodeMap), len(data))
+	for _, v := range data {
+		dataHandle[v] = new(CodeMap)
+	}
+
+	PinyinDict = dataHandle[data[0]]
+	WubiDict = dataHandle[data[1]]
+	PinyinCodeDict = dataHandle[data[2]]
+	WubiCodeDict = dataHandle[data[3]]
 
 	for k := range dataHandle {
 		f, err := os.Open(k)
@@ -88,6 +88,12 @@ func init() {
 			toneDict[v] = non[k]
 		}
 	}
+
+	if len(*PinyinDict)*len(*WubiDict)*len(*PinyinCodeDict)*len(*WubiCodeDict) == 0 {
+		return fmt.Errorf("load data failed, please load csv file")
+	}
+
+	return nil
 }
 
 func loadData(f *os.File, rst *CodeMap) {
@@ -126,9 +132,9 @@ func isEmpty(src string) bool {
 	return true
 }
 
-func getFull(cm *CodeMap, fullMode int, word string, mode SymbolMode, splitter ...string) (string, error) {
+func getFull(cm *CodeMap, fullMode int, word string, mode SymbolMode, splitter ...string) string {
 	if isEmpty(word) {
-		return "", nil
+		return ""
 	}
 	workRune := []rune(word)
 	codes := make([]string, 0, len(workRune))
@@ -164,7 +170,7 @@ func getFull(cm *CodeMap, fullMode int, word string, mode SymbolMode, splitter .
 		def_splitter = splitter[0]
 	}
 
-	return strings.Join(codes, def_splitter), nil
+	return strings.Join(codes, def_splitter)
 }
 
 func capitalizeFirstChar(w string) string {
@@ -188,9 +194,9 @@ func rmTone(w string) string {
 }
 
 //获取拼音首字母
-func getCode(cm *CodeMap, word string) (string, error) {
+func getCode(cm *CodeMap, word string) string {
 	if isEmpty(word) {
-		return "", nil
+		return ""
 	}
 	wordRune := []rune(word)
 	codes := make([]string, 0, len(wordRune))
@@ -208,5 +214,5 @@ func getCode(cm *CodeMap, word string) (string, error) {
 			codes = append(codes, val)
 		}
 	}
-	return strings.Join(codes, ""), nil
+	return strings.Join(codes, "")
 }
