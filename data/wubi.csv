@@ -27563,7 +27563,7 @@ F9F1,boqh
 FA0C,gqv
 FA0D,fpgca
 FA0E,ywyc
-FA0F,fwwks
+FA0F,fwwkss
 FA11,mukh
 FA13,sawf
 FA14,siwr
@@ -27576,13 +27576,6 @@ FA24,eyyp
 FA27,qftb
 FA28,qfuf
 FA29,bwvm
-FF01,!
-FF03,#
-FF05,%
-FF06,&
-FF08,(
-FF09,)
-FF0C,","
 FF10,0
 FF11,1
 FF12,2
@@ -27593,6 +27586,3 @@ FF16,6
 FF17,7
 FF18,8
 FF19,9
-FF1B,;
-FF1F,?
-FF20,@
